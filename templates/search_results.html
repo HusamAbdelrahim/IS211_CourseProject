@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="form-title">Search Results</h2>
+<div class="grid">
+    {% for book in books %}
+    <div class="book-card">
+        {% if book.volumeInfo.imageLinks %}
+        <img src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="{{ book.volumeInfo.title }}" class="book-image">
+        {% endif %}
+        <div class="book-content">
+            <h3 class="book-title">{{ book.volumeInfo.title }}</h3>
+            <p class="book-info"><strong>Author(s):</strong> {{ book.volumeInfo.authors|join(', ') if book.volumeInfo.authors else 'Unknown' }}</p>
+            <p class="book-info"><strong>Pages:</strong> {{ book.volumeInfo.pageCount }}</p>
+            <p class="book-info"><strong>Rating:</strong> {{ book.volumeInfo.averageRating if book.volumeInfo.averageRating else 'No rating' }}</p>
+            <form method="POST" action="{{ url_for('add_book') }}">
+                <input type="hidden" name="isbn" value="{{ book.volumeInfo.industryIdentifiers[0].identifier }}">
+                <button type="submit" class="btn">Add to Catalogue</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
